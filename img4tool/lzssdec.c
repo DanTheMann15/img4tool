@@ -14,7 +14,12 @@
 #include <stdint.h>
 #include "lzssdec.h"
 #include <libgeneral/macros.h>
+#ifdef WIN32
+#include <winsock2.h>
+void* memmem(const void* haystack, size_t haystackLen, const void* needle, size_t needleLen) { if (needleLen == 0 || haystack == needle) { return (void*)haystack; } if (haystack == NULL || needle == NULL) { return NULL; } const unsigned char* haystackStart = (const unsigned char*)haystack; const unsigned char* needleStart = (const unsigned char*)needle; const unsigned char needleEndChr = *(needleStart + needleLen - 1); ++haystackLen; for (; --haystackLen >= needleLen; ++haystackStart) { size_t x = needleLen; const unsigned char* n = needleStart; const unsigned char* h = haystackStart; if (*haystackStart != *needleStart || *(haystackStart + needleLen - 1) != needleEndChr) { continue; } while (--x > 0) { if (*h++ != *n++) { break; } } if (x == 0) { return (void*)haystackStart; } } return NULL; }
+else
 #include <arpa/inet.h>
+#endif
 #include <string.h>
 
 static uint32_t decompress_lzss(uint8_t *dst, const uint8_t *src, uint32_t srclen);

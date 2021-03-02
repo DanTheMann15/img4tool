@@ -11,7 +11,11 @@
 #include <string.h>
 #include <array>
 #include <algorithm>
+#ifdef WIN32
+#include <winsock2.h>
+else
 #include <arpa/inet.h>
+#endif
 #include "ASN1DERElement.hpp"
 #include <libgeneral/macros.h>
 extern "C"{
